@@ -121,9 +121,9 @@
 									.map((byte, index) => {
 										switch(keymode || 'random'){
 											case 'repeat':
-												return String(key[index % key.length]).charCodeAt()
+												return String(key[index % key.length]).toUpperCase().charCodeAt()
 											case 'autokey':
-												return index < key.length ? key[index].charCodeAt()
+												return index < key.length ? key[index].toUpperCase().charCodeAt()
 																									: message[index - key.length]
 											case 'random':
 											default:
@@ -138,8 +138,19 @@
 									.map((e, index) => {
 										let messageChar = message[index] - 65
 										let keystreamChar = keystream[index] - 65
+										console.log({
+											messageChar,
+											keystreamChar
+										})
+										// return (26 - Math.abs(keystreamChar - messageChar)) + 65
 
-										return ((messageChar + keystreamChar) % 26) + 65
+										return ((26 + keystreamChar - messageChar) % 26) + 65
+
+										// if(messageChar + keystreamChar > 26){
+										// 	return ((messageChar + keystreamChar) % 26) + 65
+										// } else {
+										// 	return Math.abs(messageChar - keystreamChar) + 65
+										// }
 									})
 
 	console.log(ciphertext.map(e => [String(e - 65), String.fromCharCode(e)]))

@@ -3,30 +3,27 @@
 	margin: 0;
 	padding: 0;
 	font-family: monospace;
-	font-weight: bold;
 	font-size: large;	
 	background: #222;
 }
 
 section {
 	width: 800px;
+	margin: 70px auto 0;
+	color: white;
+}
 
+section.interactive {
 	background: white;
-
-	margin: 24px;
-
-	margin-top: 24px;
-
-	margin-top: 70px;
+	color: black;
 }
 
 
-h2 {
+section.interactive h2 {
 	font-size: revert;
-	border: 1px solid white;
 	padding: 8px;
 	position: relative;
-	background: #fff;
+	background: white;
 	font-weight: normal;
 }
 
@@ -56,6 +53,7 @@ input[name="colorform"] {
 	width: 100%;
 	height: 36px;
 	line-height: 36px;
+	font-weight: bold;
 }
 
 #showhex > div, #showbin > div {
