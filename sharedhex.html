@@ -1,0 +1,69 @@
+<meta charset="utf8">
+<link rel="stylesheet" href="./cryptostyle.css">
+<section>
+<h2> Choose a color to see nearby primes </h2>
+<form id="choosehex">
+	<input name="colorpick" type="color">
+	<input name="colorform" autocomplete="false" type="text">
+	<div id="showhex"></div>
+	<div id="showbin"></div>
+
+</form>
+</section>
+<section>
+	<h2> Choose a prime number to use as your shared modulus </h2>
+<form>
+	<div id="sharedprime">
+		<!-- gets filled in programmatically -->
+	</div>
+</form>
+</section>
+
+
+<script src="./isprime.js"></script>
+<script src="./neighborprime.js"></script>
+<script src="./getquery.js"></script>
+<script src="./updateHexBin.js"></script>
+<script src="./extrapower.js"></script>
+
+<script>
+
+	let $ = document.querySelector.bind(document)
+	let $$ = document.querySelectorAll.bind(document)
+	let create = document.createElement.bind(document)
+
+	let colorpick = $('input[name="colorpick"]')
+	let colorform = $('input[name="colorform"]')
+	let showhex = $('#showhex')
+	let showbin = $('#showbin')
+	let sharedprime = $('#sharedprime')
+	let sharedprimebuttons = new Array
+	let lastColor = null
+
+	Array.from(new Array(6), () => create('div')).forEach(div => {
+		div.classList.add('hexpiece')
+		div.textContent = '0'
+		showhex.appendChild(div)
+	})
+	Array.from(new Array(24), () => create('div')).forEach(div => {
+		div.classList.add('binpiece')
+		div.textContent = '0'
+		showbin.appendChild(div)
+	})
+	Array.from(new Array(16), () => create('button')).forEach(button => {
+		button.setAttribute('name', 'sharedprime')
+		sharedprime.appendChild(button)
+		sharedprimebuttons.push(button)
+	})
+
+	if(getquery()['colorform']){
+		colorpick.value = '#' + getquery().colorform
+	}
+
+	updateHexBin(colorpick.value)
+
+	colorpick.addEventListener('input', event => 
+		updateHexBin(event.target.value)
+	)
+
+</script>	

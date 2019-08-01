@@ -1,0 +1,167 @@
+<meta charset="utf8">
+<link rel="stylesheet" href="./cryptostyle.css">
+<style>
+
+	section {
+		width: 750px;
+		margin: 0 auto;
+	}
+
+	ul.rando {
+		list-style: none;
+		display: inline-block;
+	}
+
+	ul.rando li {
+		background: #5e5e5e;
+		color: white;
+		width: 30px;
+		height: 30px;
+		line-height: 30px;
+		text-align: center;
+		margin: 5px 0;
+	}
+
+	.rando:nth-child(5n + 1){
+		margin-left: 25px;
+	}
+
+	input[type="text"] {
+		background: white;
+	}
+
+	#inputs input {
+		display: block;
+		width: 100%;
+		margin: 10px 0;
+		padding: 2px;
+	}
+	#inputs label {
+		color:white;
+	}
+
+	#buttonheader  {
+		display: flex;
+		justify-content: space-around;
+		margin-top: 25px;
+	}
+	#buttonheader button {
+		width: 33%;
+		background: white;
+
+	}
+</style>
+
+<section>
+<form>
+	<div id="inputs">
+		<label for="key"> key </label>
+		<input type="text" label="key" name="key">
+		<label for="input"> plaintext </label>
+		<input type="text" label="plaintext" name="input">
+		<label for="output"> ciphertext </label>
+		<input type="text" label="ciphertext" name="output">
+	</div>
+	<div id="buttonheader">
+		<button name="keymode" value="repeat"> repeat </button>
+		<button name="keymode" value="autokey"> autokey </button>
+		<button name="keymode" value="random"> random </button>
+	</div>
+	<div id="otp">
+		<!-- gets filled in programmatically -->
+	</div>
+</form>
+</section>
+
+
+<script src="./getquery.js"></script>
+<script src="./seedrandom.js"></script>
+
+<script>
+
+	let $ = document.querySelector.bind(document)
+	let $$ = document.querySelectorAll.bind(document)
+	let create = document.createElement.bind(document)
+
+
+
+	let otp = $('#otp')
+	let {key, input, output, keymode} = getquery()
+
+	let keyInput = $(`input[name="key"]`)
+	let inputInput = $(`input[name="input"]`)
+	let outputInput = $(`input[name="output"]`)
+
+	keyInput.value = key || ''
+	inputInput.value = input || ''
+	outputInput.value = output || ''
+
+	Math.seedrandom(key || undefined) // don't use empty string for seed
+
+	let message = Array
+								.from(input || '')
+								.map(char => 
+									char = char.toUpperCase().charCodeAt()
+								)
+								.filter(char => 
+									char >= 65 && char <= 90
+								)
+
+	// fill message up with 'X' (88 ascii) to some multiple of 5 for nice blocked ciphertext 
+
+
+	if(message.length % 5 > 0){
+		message.push(...Array.from(new Array(5 - (message.length % 5)), () => 88))
+	}
+
+	console.log(message.map(e => [String(e - 65), String.fromCharCode(e)]))
+
+	let keystream = Array
+									.from(new Array(message.length))
+									.map((byte, index) => {
+										switch(keymode || 'random'){
+											case 'repeat':
+												return String(key[index % key.length]).charCodeAt()
+											case 'autokey':
+												return index < key.length ? key[index].charCodeAt()
+																									: message[index - key.length]
+											case 'random':
+											default:
+												return 65 + Math.floor(Math.random() * 26)
+										}
+									})
+
+	console.log(keystream.map(e => [String(e - 65), String.fromCharCode(e)]))
+
+	let ciphertext = Array
+									.from(new Array(message.length))
+									.map((e, index) => {
+										let messageChar = message[index] - 65
+										let keystreamChar = keystream[index] - 65
+
+										return ((messageChar + keystreamChar) % 26) + 65
+									})
+
+	console.log(ciphertext.map(e => [String(e - 65), String.fromCharCode(e)]))
+
+	outputInput.value = ciphertext.map(e => String.fromCharCode(e)).join('')
+
+	Array.from(new Array(message.length), () => create('ul')).forEach((ul, index) => {
+		ul.classList.add('rando')
+
+		let msgitem    = create('li')
+		let keyitem    = create('li')
+		let cipheritem = create('li')
+
+		msgitem.textContent = String.fromCharCode(message[index])
+		keyitem.textContent = String.fromCharCode(keystream[index])
+		cipheritem.textContent = String.fromCharCode(ciphertext[index])
+
+		ul.appendChild(msgitem)
+		ul.appendChild(keyitem)
+		ul.appendChild(cipheritem)
+		otp.appendChild(ul)
+	})
+
+
+</script>
