@@ -2,37 +2,35 @@
 <link rel="stylesheet" href="./cryptostyle.css">
 <section>
 	<h2>RGB Key Exchange</h2>
-<p>
-	Diffie-Helman Key Exchanges are an innovation in cryptography for two parties communicating on an insecure channel to establish a shared secret, allowing them to encrypt messages back and forth even when an eavesdropper can capture all data between them.
-</p>
-
+	<p>
+		Diffie-Helman Key Exchanges are an innovation in cryptography for two parties communicating on an insecure channel to establish a shared secret, allowing them to encrypt messages back and forth even when an eavesdropper can capture all data between them.
+	</p>
 </section>
-
 <section class="interactive">
-<h2> Choose a color to see nearby primes </h2>
-<form id="choosehex">
-	<input name="colorpick" type="color">
-	<input name="colorform" autocomplete="false" type="text">
-	<div id="showhex"></div>
-	<div id="showbin"></div>
-
-</form>
+	<h2> Choose a color to see nearby primes </h2>
+	<form id="choosehex">
+		<input name="colorpick" type="color">
+		<input name="colorform" autocomplete="false" type="text">
+		<div id="showhex"></div>
+		<div id="showbin"></div>
+	</form>
 </section>
 <section class="interactive">
 	<h2> Choose a prime number to use as your shared modulus </h2>
-<form>
-	<div id="sharedprime">
-		<!-- gets filled in programmatically -->
-	</div>
-</form>
+	<form action="./mixedkeys.html">
+		<div id="sharedprime">
+			<!-- gets filled in programmatically -->
+		</div>
+	</form>
 </section>
+
 
 
 <script src="./isprime.js"></script>
 <script src="./neighborprime.js"></script>
 <script src="./getquery.js"></script>
 <script src="./updateHexBin.js"></script>
-<script src="./extrapower.js"></script>
+
 
 <script>
 
@@ -45,6 +43,8 @@
 	let showhex = $('#showhex')
 	let showbin = $('#showbin')
 	let sharedprime = $('#sharedprime')
+	let publickey = $('#publickey')
+	let privatekey = $('button[name="privatekey"]')
 	let sharedprimebuttons = new Array
 	let lastColor = null
 
@@ -73,5 +73,4 @@
 	colorpick.addEventListener('input', event => 
 		updateHexBin(event.target.value)
 	)
-
 </script>	

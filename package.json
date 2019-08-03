@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "colorsys": "^1.0.22",
     "mathjs": "^6.0.3"
   }
 }

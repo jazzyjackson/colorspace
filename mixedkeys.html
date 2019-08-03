@@ -1,0 +1,102 @@
+<meta charset="utf8">
+<link rel="stylesheet" href="./cryptostyle.css">
+<style>
+	.circles, .mod, .hexmod {
+		background: white;
+		display: flex;
+		justify-content: space-around;
+	}
+	.circles button {
+		width: 100px;
+		height: 100px;
+		border-radius: 100px;
+	}
+	.mod div, .hexmod div {
+		background: white;
+		margin: 12px;
+		position: relative;
+	}
+	.mod .power, .hexmod .power {
+		background: white;
+		position: relative;
+		font-size: smaller;
+		top: -8px;
+	}
+</style>
+<section>
+	<h2>RGB Key Exchange</h2>
+	<h3> part 2 </h3>
+	<p>
+		Using modular arithmatic we can mix our random private keys to arrive at a shared secret.
+	</p>
+</section>
+<section id="makepublic" class="interactive">
+	<h2> Click to generate a random private key </h2>
+	<div class="circles">
+		<button class="privatekey"></button>
+		<button class="sharedprime"></button>
+		<button class="publickey"></button>
+	</div>
+	<div class="mod">
+	</div>
+		<div class="hexmod">
+	</div>
+</section>
+
+<section id="makeshared" class="interactive">
+	<h2> Click to generate a random private key </h2>
+	<div class="circles">
+		<button class="privatekey"></button>
+		<button class="sharedprime"></button>
+		<button class="publickey"></button>
+	</div>
+	<div class="mod">
+	</div>
+</section>
+
+
+<script src="./getquery.js"></script>
+<script src="./extrapower.js"></script>
+
+<script type="text/javascript">
+	let $ = document.querySelector.bind(document)
+	let $$ = document.querySelectorAll.bind(document)
+	let create = document.createElement.bind(document)
+
+	let makepublic = $('#makepublic')
+	let mod = $('#makepublic .mod')
+	let hexmod = $('#makepublic .hexmod')
+	let sharedprimebutton = $('#makepublic .sharedprime')
+	let publickeybutton = $('#makepublic .publickey')
+	let privatekeybutton = $('#makepublic .privatekey')
+
+	let {sharedprime} = getquery()
+
+	sharedprimebutton.style.background = '#' + sharedprime
+
+	makepublic.addEventListener('click', event => {
+		event.preventDefault()
+		let color = Math.floor(Math.random() * Math.pow(2, 24)).toString(16)
+		privatekeybutton.value = color
+		privatekeybutton.style.background = '#' + color
+
+		calculatePublicKey(parseInt(sharedprime, 16), parseInt(color, 16))
+	})
+
+	/**
+		Recalculate when private key or shared prime is updated...
+		What about first color ... ?
+	**/
+	function calculatePublicKey(sharedprime, privatekey){
+		let publickeyval = power(2, privatekey, sharedprime)
+		mod.innerHTML = 
+			`<div>2<span class="power">${privatekey}</span></div>` + 
+			`<div> mod ${sharedprime} </div>` + 
+			`<div> = ${publickeyval} </div>`
+		hexmod.innerHTML = 
+			`<div>2<span class="power">${privatekey.toString(16)}</span></div>` + 
+			`<div> mod ${sharedprime.toString(16)} </div>` + 
+			`<div> = ${publickeyval.toString(16)} </div>`
+		publickeybutton.style.background = '#' + publickeyval.toString(16)
+	}
+</script>

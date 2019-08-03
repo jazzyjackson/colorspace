@@ -1,0 +1,91 @@
+<meta charset="utf8">
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
+		background: #ddd;
+	}
+	#colorcube {
+		position: relative;
+		bottom: Calc(25vw / 4);
+		width: 25vw;
+		height: 25vw;
+		right: Calc(25vw / 4);
+	}
+
+	#colorcube ul {
+		width: 25vw;
+		height: 25vw;
+		margin: Calc(25vw / 16);
+		position: absolute;
+		opacity: 0;
+		transition: opacity 5s;
+	}
+	#colorcube ul.show {
+		opacity: 1 !important;
+	}
+
+	#colorcube ul li {
+		width: Calc(25vw / 16);
+		height: Calc(25vw / 16);
+		display: inline-block;
+	}
+
+</style>
+<body>
+	<div id="colorcube"></div>
+</body>
+<script src="./colorsys2.js"></script>
+<script>
+	let colorcube = document.querySelector('#colorcube')
+	let newlayer = null
+	// Array.from(new Array(16), (empty, index_z)
+	Array.from(new Array(16), (empty, index_z) => {
+		var newlayer = document.createElement('ul')
+		newlayer.style.left = `Calc(25vw * ${index_z / 2} / 16)`
+		newlayer.style.top = `Calc(25vw * ${index_z / 2} / 16)`
+
+		Array.from(new Array(16), (empty,index_x) => {
+			Array.from(new Array(16), (empty, index_y) => {
+			  let div = document.createElement('li')
+			  div.style.background = '#' + index_x.toString(16) + index_y.toString(16) + index_z.toString(16)
+				newlayer.appendChild(div)
+			})
+		})
+		colorcube.appendChild(newlayer)
+	})
+
+	let sliceIndex = 5
+	let slices = document.querySelectorAll('#colorcube ul')
+	let forward = true;
+	let sliceCache = {}
+
+	/**
+	OK So, from 0 on up, 10 slices will be revealed before the last one dissapears.
+	So after the 15th slice, we should count up to 20 and back down to 15... to double back just in time.
+	But then we should count down to -5 ... 
+	**/
+	setInterval(function(){
+
+		sliceIndex += forward ? 1 : -1
+		if(sliceIndex == 26 || sliceIndex == 0){
+			forward = !forward
+		}
+
+		let thisSlice = slices[sliceIndex - 6]
+
+		if(!thisSlice) return null
+
+		thisSlice.className = "show"
+		setTimeout(function(){
+			thisSlice.className = ""
+		}, 5000)
+	}, 500)
+
+</script>

@@ -1,0 +1,71 @@
+// <head>
+//   <!--
+//   Note to self,
+//   would be great to upgrade this to an example of a lower dimension projection of 5d automata
+//   That is, 2D distance + colorspace distance
+//   Ah, with RGB, you just print them 
+//   Draw that 3D cube
+//   -->
+//   <script>
+  var perrow = Math.ceil(innerWidth / 293.3 * 2)
+  var numRows = Math.ceil(innerHeight / 143.3)
+  var numTrigrams = perrow * numRows;
+
+  var rowString = Array.from(new Array(perrow), emptystring => `<div class="trigramcontainer"><div class="trigram"></div></div>`).join('')
+  // var rowString = Array.from(new Array(perrow), empty => {'div': [[{'class': 'trigramcontainer'}], [{'div': {'class': 'trigram'}}]]}
+  var rowString = Array.from(new Array(perrow), empty => (
+    {'div':{
+      'class': 'trigramcontainer',
+      'childNodes': [
+        {'div': {
+          'class': 'trigram'}
+        }
+      ]
+    }}
+  var bodyString = Array.from(new Array(numRows), emptystring => `<div class="row">${rowString}</div>`).join('')
+  window.onload = () => {
+    document.body.innerHTML = bodyString
+    setInterval(()=>{
+        var arrayOfTrigrams = document.querySelectorAll('.trigram')
+        var red = Math.random() > 0.5 ? "rgba(255,0,0,1)" : "transparent"
+        var green = Math.random() > 0.5 ? "rgba(0,255,0,1)" : "transparent"
+        var blue = Math.random() > 0.5 ? "rgba(0,0,255,1)" : "transparent"
+
+        arrayOfTrigrams[Math.floor(Math.random() * numTrigrams)].style.background = `radial-gradient(50px at 50px 50px,${red},${red} 99%, transparent 99%, transparent), 
+                        radial-gradient(50px at 50px 100px, ${green}, ${green} 99%, transparent 99%, transparent),
+                        radial-gradient(50px at 93.3px 75px, ${blue}, ${blue} 99%, transparent 99%, transparent)`
+    }, Math.round(1000 / numTrigrams))
+  }
+  </script>
+  <style>
+	body{
+      background: lightgrey;
+      overflow: hidden;
+    }
+    .trigram {
+      width: 143.3;
+      height: 150;
+      background: radial-gradient(50px at 50px 50px, red, rgba(255,0,0,1) 99%, transparent 99%, transparent), 
+                  radial-gradient(50px at 50px 100px, rgba(0,255,0,1), rgba(0,255,0,1) 99%, transparent 99%, transparent),
+                  radial-gradient(50px at 93.3px 75px, rgba(0,0,255,1), rgba(0,0,255,1) 99%, transparent 99%, transparent);
+      background-blend-mode: lighten;
+          transform: rotate(-90deg)
+
+    }
+    .trigramcontainer {
+      margin: 0;
+      width: 150px;
+      height: 143.30px;
+    }
+    .trigramcontainer:nth-child(even) {
+      transform: rotate(180deg);
+      position: relative;
+      top: 10px;
+    }
+    .row {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+</body>
